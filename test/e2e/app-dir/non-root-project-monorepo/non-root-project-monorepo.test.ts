@@ -123,6 +123,7 @@ describe('non-root-project-monorepo', () => {
               2 |"
           `)
           // TODO webpack runtime code shouldn't be included in stack trace
+          // TODO stacktrace-parser breaks in some cases with the rsc:// protocol
           expect(normalizeStackTrace(await getRedboxCallStack(browser)))
             .toMatchInlineSnapshot(`
            "<unknown>
