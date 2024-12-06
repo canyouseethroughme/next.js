@@ -1191,7 +1191,7 @@ export default function Home() {
 
     if (isTurbopack) {
       expect(source).toMatchInlineSnapshot(`
-        "app/utils.ts (1:7) @ Object.{module evaluation}
+        "app/utils.ts (1:7)
 
         > 1 | throw new Error('utils error')
             |       ^
