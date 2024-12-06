@@ -146,16 +146,16 @@ describe('middleware - development errors', () => {
       expect(stripAnsi(next.cliOutput)).toContain(
         isTurbopack
           ? '\n ⨯ Error [ReferenceError]: test is not defined' +
-              '\n    at eval (middleware.js:4:8)' +
+              '\n    at middleware.js:4:8' +
               '\n    at <unknown> (middleware.js:4:8)' +
               // TODO(veil): Should be sourcemapped
               '\n    at __TURBOPACK__default__export__ ('
           : '\n ⨯ Error [ReferenceError]: test is not defined' +
               // TODO(veil): Redundant and not clickable
-              '\n    at eval (file://webpack-internal:///(middleware)/./middleware.js)' +
-              '\n    at eval (middleware.js:4:8)' +
+              '\n    at file://webpack-internal:///(middleware)/./middleware.js' +
+              '\n    at middleware.js:4:8' +
               // TODO(veil): Redundant
-              '\n    at eval (middleware.js:4:8)' +
+              '\n    at middleware.js:4:8' +
               "\n  2 |       import { NextResponse } from 'next/server'"
       )
       expect(stripAnsi(next.cliOutput)).toContain(
@@ -166,7 +166,7 @@ describe('middleware - development errors', () => {
               '\n    at __TURBOPACK__default__export__ ('
           : "\n ⚠ DynamicCodeEvaluationWarning: Dynamic Code Evaluation (e. g. 'eval', 'new Function') not allowed in Edge Runtime" +
               '\nLearn More: https://nextjs.org/docs/messages/edge-dynamic-code-evaluation' +
-              '\n    at eval (middleware.js:4:8)' +
+              '\n    at middleware.js:4:8' +
               "\n  2 |       import { NextResponse } from 'next/server'"
       )
     })
@@ -217,7 +217,7 @@ describe('middleware - development errors', () => {
               // TODO: Should be anonymous method without a method name
               '\n    at <unknown> (middleware.js:3)' +
               // TODO: Should be ignore-listed
-              '\n    at eval (middleware.js:3:12)' +
+              '\n    at middleware.js:3:12' +
               '\n    at (middleware)/./middleware.js (.next/server/middleware.js:40:1)' +
               '\n    at __webpack_require__ '
       )
