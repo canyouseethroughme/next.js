@@ -114,9 +114,9 @@ describe.each([
                     // Next.js internal frame. Feel free to adjust.
                     // Not ignore-listed because we're not in an isolated app and Next.js is symlinked so it's not in node_modules
                     '\n    at'
-                : '\n    at eval (../../test/integration/edge-runtime-dynamic-code/lib/utils.js:11:18)' +
+                : '\n    at ../../test/integration/edge-runtime-dynamic-code/lib/utils.js:11:18' +
                     '\n    at usingEval (../../test/integration/edge-runtime-dynamic-code/middleware.js:12:53)' +
-                    '\n    at eval (../packages/next/dist'
+                    '\n    at ../packages/next/dist'
             )
           } else {
             expect(output).toContain(
@@ -127,7 +127,7 @@ describe.each([
                     // Next.js internal frame. Feel free to adjust.
                     // Not ignore-listed because we're not in an isolated app and Next.js is symlinked so it's not in node_modules
                     '\n    at'
-                : '\n    at eval (../../test/integration/edge-runtime-dynamic-code/lib/utils.js:11:18)' +
+                : '\n    at ../../test/integration/edge-runtime-dynamic-code/lib/utils.js:11:18' +
                     '\n    at usingEval (../../test/integration/edge-runtime-dynamic-code/pages/api/route.js:13:23)' +
                     '\n   9 | export async function usingEval() {'
             )
