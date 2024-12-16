@@ -8,7 +8,7 @@ use std::fmt::Write;
 
 use anyhow::{bail, Result};
 use turbo_rcstr::RcStr;
-use turbo_tasks::{ResolvedVc, TryJoinIterExt, Value, ValueToString, Vc};
+use turbo_tasks::{ResolvedVc, TryFlatJoinIterExt, TryJoinIterExt, Value, ValueToString, Vc};
 use turbo_tasks_fs::FileSystem;
 use turbopack_core::{
     asset::{Asset, AssetContent},
@@ -19,7 +19,7 @@ use turbopack_core::{
         utils::{children_from_output_assets, content_to_details},
         Introspectable, IntrospectableChildren,
     },
-    output::OutputAssets,
+    output::{OutputAsset, OutputAssets},
     server_fs::ServerFileSystem,
 };
 
@@ -133,7 +133,16 @@ impl Chunk for EcmascriptChunk {
     #[turbo_tasks::function]
     async fn references(&self) -> Result<Vc<OutputAssets>> {
         let content = self.content.await?;
-        Ok(Vc::cell(content.referenced_output_assets.clone()))
+        let mut referenced_output_assets: Vec<ResolvedVc<Box<dyn OutputAsset>>> = content
+            .chunk_items
+            .iter()
+            .map(|(chunk_item, _)| async move {
+                Ok(chunk_item.references().await?.into_iter().copied())
+            })
+            .try_flat_join()
+            .await?;
+        referenced_output_assets.extend(content.referenced_output_assets.iter().copied());
+        Ok(Vc::cell(referenced_output_assets))
     }
 
     #[turbo_tasks::function]
