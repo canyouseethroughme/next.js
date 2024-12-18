@@ -25,8 +25,6 @@ import {
 } from '../helpers/console-error'
 import { extractNextErrorCode } from '../../../../../../lib/error-telemetry-utils'
 import { ErrorIndicator } from '../components/Errors/ErrorIndicator/ErrorIndicator'
-import { ErrorPagination } from '../components/Errors/ErrorPagination/ErrorPagination'
-import { ToolButtonsGroup } from '../components/ToolButtonsGroup/ToolButtonsGroup'
 import { ErrorOverlayLayout } from '../components/Errors/ErrorOverlayLayout/ErrorOverlayLayout'
 
 export type SupportedErrorEvent = {
@@ -260,14 +258,13 @@ export function Errors({
         <ErrorDescription error={error} hydrationWarning={hydrationWarning} />
       }
       onClose={isServerError ? undefined : minimize}
+      debugInfo={debugInfo}
+      error={error}
+      readyErrors={readyErrors}
+      activeIdx={activeIdx}
+      setActiveIndex={setActiveIndex}
       temporaryHeaderChildren={
         <>
-          <ErrorPagination
-            readyErrors={readyErrors}
-            activeIdx={activeIdx}
-            onActiveIndexChange={setActiveIndex}
-          />
-          <ToolButtonsGroup error={error} debugInfo={debugInfo} />
           {notes ? (
             <>
               <p

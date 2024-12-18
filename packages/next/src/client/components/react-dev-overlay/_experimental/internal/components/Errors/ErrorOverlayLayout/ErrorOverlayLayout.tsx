@@ -1,6 +1,10 @@
+import type { ReadyRuntimeError } from '../../../helpers/get-error-by-type'
+import type { DebugInfo } from '../../../../../types'
 import type { VersionInfo } from '../../../../../../../../server/dev/parse-version-info'
 import { Dialog, DialogHeader, DialogBody, DialogContent } from '../../Dialog'
 import { Overlay } from '../../Overlay'
+import { ErrorPagination } from '../ErrorPagination/ErrorPagination'
+import { ToolButtonsGroup } from '../../ToolButtonsGroup/ToolButtonsGroup'
 import { VersionStalenessInfo } from '../../VersionStalenessInfo'
 
 type ErrorOverlayLayoutProps = {
@@ -13,11 +17,17 @@ type ErrorOverlayLayoutProps = {
     | 'Missing Required HTML Tag'
   children?: React.ReactNode
   errorCode?: string
+  error?: Error
+  debugInfo?: DebugInfo
   isBuildError?: boolean
   onClose?: () => void
   // TODO: remove this
   temporaryHeaderChildren?: React.ReactNode
   versionInfo?: VersionInfo
+  // TODO: better handle receiving
+  readyErrors?: ReadyRuntimeError[]
+  activeIdx?: number
+  setActiveIndex?: (index: number) => void
 }
 
 export function ErrorOverlayLayout({
@@ -25,10 +35,15 @@ export function ErrorOverlayLayout({
   errorType,
   children,
   errorCode,
+  error,
+  debugInfo,
   isBuildError,
   onClose,
   temporaryHeaderChildren,
   versionInfo,
+  readyErrors,
+  activeIdx,
+  setActiveIndex,
 }: ErrorOverlayLayoutProps) {
   return (
     <Overlay fixed={isBuildError}>
@@ -40,6 +55,12 @@ export function ErrorOverlayLayout({
       >
         <DialogContent>
           <DialogHeader className="nextjs-container-errors-header">
+            {/* TODO: better passing data instead of nullish coalescing */}
+            <ErrorPagination
+              readyErrors={readyErrors ?? []}
+              activeIdx={activeIdx ?? 0}
+              onActiveIndexChange={setActiveIndex ?? (() => {})}
+            />
             <div
               className="nextjs__container_errors__error_title"
               // allow assertion in tests before error rating is implemented
@@ -50,7 +71,9 @@ export function ErrorOverlayLayout({
                 className="nextjs__container_errors_label"
               >
                 {errorType}
+                {/* TODO: Need to relocate this so consider data flow. */}
               </h1>
+              <ToolButtonsGroup error={error} debugInfo={debugInfo} />
             </div>
             <VersionStalenessInfo versionInfo={versionInfo} />
             <p
