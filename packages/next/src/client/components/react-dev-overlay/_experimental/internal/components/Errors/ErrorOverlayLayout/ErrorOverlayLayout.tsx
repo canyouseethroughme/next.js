@@ -4,26 +4,31 @@ import { Overlay } from '../../Overlay'
 import { VersionStalenessInfo } from '../../VersionStalenessInfo'
 
 type ErrorOverlayLayoutProps = {
+  errorMessage: string | React.ReactNode
   errorType:
     | 'Build Error'
     | 'Runtime Error'
     | 'Console Error'
     | 'Unhandled Runtime Error'
     | 'Missing Required HTML Tag'
-  errorMessage: string | React.ReactNode
-  onClose: () => void
-  isBuildError?: boolean
-  versionInfo?: VersionInfo
   children?: React.ReactNode
+  errorCode?: string
+  isBuildError?: boolean
+  onClose?: () => void
+  // TODO: remove this
+  temporaryHeaderChildren?: React.ReactNode
+  versionInfo?: VersionInfo
 }
 
 export function ErrorOverlayLayout({
-  errorType,
   errorMessage,
-  onClose,
+  errorType,
   children,
-  versionInfo,
+  errorCode,
   isBuildError,
+  onClose,
+  temporaryHeaderChildren,
+  versionInfo,
 }: ErrorOverlayLayoutProps) {
   return (
     <Overlay fixed={isBuildError}>
@@ -35,12 +40,18 @@ export function ErrorOverlayLayout({
       >
         <DialogContent>
           <DialogHeader className="nextjs-container-errors-header">
-            <h1
-              id="nextjs__container_errors_label"
-              className="nextjs__container_errors_label"
+            <div
+              className="nextjs__container_errors__error_title"
+              // allow assertion in tests before error rating is implemented
+              data-nextjs-error-code={errorCode}
             >
-              {errorType}
-            </h1>
+              <h1
+                id="nextjs__container_errors_label"
+                className="nextjs__container_errors_label"
+              >
+                {errorType}
+              </h1>
+            </div>
             <VersionStalenessInfo versionInfo={versionInfo} />
             <p
               id="nextjs__container_errors_desc"
@@ -48,6 +59,7 @@ export function ErrorOverlayLayout({
             >
               {errorMessage}
             </p>
+            {temporaryHeaderChildren}
           </DialogHeader>
           <DialogBody className="nextjs-container-errors-body">
             {children}
