@@ -177,17 +177,6 @@ export function Errors({
   const [displayState, setDisplayState] =
     useState<DisplayState>(initialDisplayState)
   const [activeIdx, setActiveIndex] = useState<number>(0)
-  const previous = useCallback(
-    () => setActiveIndex((v) => Math.max(0, v - 1)),
-    []
-  )
-  const next = useCallback(
-    () =>
-      setActiveIndex((v) =>
-        Math.max(0, Math.min(readyErrors.length - 1, v + 1))
-      ),
-    [readyErrors.length]
-  )
 
   const activeError = useMemo<ReadyErrorEvent | null>(
     () => readyErrors[activeIdx] ?? null,
@@ -274,12 +263,9 @@ export function Errors({
       temporaryHeaderChildren={
         <>
           <ErrorPagination
-            activeIdx={activeIdx}
             readyErrors={readyErrors}
-            previous={previous}
-            next={next}
-            minimize={minimize}
-            isServerError={isServerError}
+            activeIdx={activeIdx}
+            onActiveIndexChange={setActiveIndex}
           />
           <ToolButtonsGroup error={error} debugInfo={debugInfo} />
           {notes ? (
