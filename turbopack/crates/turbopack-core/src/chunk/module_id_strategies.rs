@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{bail, Result};
 use turbo_rcstr::RcStr;
 use turbo_tasks::{FxIndexMap, ResolvedVc, ValueToString, Vc};
 use turbo_tasks_hash::hash_xxh3_hash64;
@@ -57,19 +57,21 @@ impl ModuleIdStrategy for GlobalModuleIdStrategy {
 
         // This shouldn't happen
         // It means we missed something when generating the map
-        ModuleIssue {
-            ident: ident.to_resolved().await?,
-            title: StyledString::Text(
-                format!("ModuleId not found for ident: {:?}", ident_string).into(),
-            )
-            .resolved_cell(),
-            description: StyledString::Text(
-                format!("ModuleId not found for ident: {:?}", ident_string).into(),
-            )
-            .resolved_cell(),
-        }
-        .resolved_cell()
-        .emit();
+        println!("ModuleId not found for ident: {:?}", ident_string);
+        bail!("ModuleId not found for ident: {:?}", ident_string);
+        // ModuleIssue {
+        //     ident: ident.to_resolved().await?,
+        //     title: StyledString::Text(
+        //         format!("ModuleId not found for ident: {:?}", ident_string).into(),
+        //     )
+        //     .resolved_cell(),
+        //     description: StyledString::Text(
+        //         format!("ModuleId not found for ident: {:?}", ident_string).into(),
+        //     )
+        //     .resolved_cell(),
+        // }
+        // .resolved_cell()
+        // .emit();
 
         Ok(ModuleId::String(
             hash_xxh3_hash64(ident.to_string().await?)
