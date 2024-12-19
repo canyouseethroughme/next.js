@@ -3,7 +3,9 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use clap::{Args, Parser};
+use clap::{Args, Parser, ValueEnum};
+use serde::{Deserialize, Serialize};
+use turbo_tasks::TaskInput;
 use turbopack_cli_utils::issue::IssueSeverityCliOption;
 
 #[derive(Debug, Parser)]
@@ -21,6 +23,12 @@ impl Arguments {
             Arguments::Dev(args) => args.common.dir.as_deref(),
         }
     }
+}
+
+#[derive(Copy, Clone, Debug, ValueEnum, PartialEq, Eq, Serialize, Deserialize, Hash, TaskInput)]
+pub enum Target {
+    Browser,
+    Node,
 }
 
 #[derive(Debug, Args, Clone)]
@@ -61,6 +69,10 @@ pub struct CommonArguments {
     /// MB.
     #[clap(long)]
     pub memory_limit: Option<usize>,
+
+    /// Target
+    #[clap(long)]
+    pub target: Option<Target>,
 }
 
 #[derive(Debug, Args)]
